@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 // php artisan passport:install
 /*
 |--------------------------------------------------------------------------
@@ -58,4 +59,35 @@ Route::post('/login', function (Request $request) {
 });
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::middleware('auth:api')->put('/perfil', function (Request $request) {
+    $user = $request->user();
+    $data = $request->all();
+
+    if (isset($data['password'])){
+        $validacao = Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($user->id)],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+        $data['password'] = Hash::make($data['password']);
+        return('Com senha');
+    } else {
+        $validacao = Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($user->id)],
+        ]); 
+        return('Sem senha');
+        }  
+
+if ($validacao->fails()){
+    return $validacao->errors();
+}
+
+$user->name = $data['name'];
+$user->email = $data['email'];  
+$user->save();
+$user->token = $user->createToken($user->email)->accessToken;
+return $user;
+    
 });
