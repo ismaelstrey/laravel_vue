@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Validator;
 |
 */
 Route::post('/cadastro', function (Request $request) {
-    $data = $request->all();  
+    $data = $request->all();
 
     $validacao = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
@@ -34,8 +34,8 @@ Route::post('/cadastro', function (Request $request) {
     return $user;
 });
 
-Route::post('/login', function (Request $request) { 
-     $data = $request->all(); 
+Route::post('/login', function (Request $request) {
+     $data = $request->all();
 
      $validacao = Validator::make($data, [
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -53,8 +53,8 @@ Route::post('/login', function (Request $request) {
             'status'=>false
         ];
     }
-    
-   
+
+
 });
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
