@@ -70,24 +70,52 @@ Route::middleware('auth:api')->put('/perfil', function (Request $request) {
             'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($user->id)],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+        if($validacao->fails()){
+            return $validacao->errors();
+          }
         $data['password'] = Hash::make($data['password']);
-        return('Com senha');
     } else {
         $validacao = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($user->id)],
-        ]); 
-        return('Sem senha');
-        }  
+        ]);
+        if ($validacao->fails()){
+            return $validacao->errors();
+        }
+        $user->name = $data['name'];
+        $user->email = $data['email'];
 
-if ($validacao->fails()){
-    return $validacao->errors();
-}
+        }
 
-$user->name = $data['name'];
-$user->email = $data['email'];  
+
+if (isset($data['image'])){
+
+        $time = time();
+        $diretorioPai = 'perfils';
+        $diretorioImagem = $diretorioPai.DIRECTORY_SEPARATOR.'perfil_id'.$user->id;
+        $ext = substr($data['image'], 11, strpos($data['image'], ';') - 11);
+        $urlImagem = $diretorioImagem.DIRECTORY_SEPARATOR.$time.'.'.$ext;
+        $file = str_replace('data:image/'.$ext.';base64,','',$data['image']);
+        $file = base64_decode($file);
+
+        if(!file_exists($diretorioPai)){
+            mkdir($diretorioPai,0700);
+        }if(!file_exists($diretorioImagem)){
+            mkdir($diretorioImagem,0700);
+        }
+        file_put_contents($urlImagem, $file);
+
+        $user->image = $urlImagem;
+    }else {
+
+    }
+
+
 $user->save();
+$user->image = asset($user->image);
 $user->token = $user->createToken($user->email)->accessToken;
 return $user;
-    
-});
+
+}
+
+);
