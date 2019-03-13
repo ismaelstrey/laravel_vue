@@ -71,13 +71,13 @@ Route::middleware('auth:api')->put('/perfil', function (Request $request) {
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         $data['password'] = Hash::make($data['password']);
-        return('Com senha');
+        // return('Com senha');
     } else {
         $validacao = Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($user->id)],
         ]); 
-        return('Sem senha');
+        // return('Sem senha');
         }  
 
 if ($validacao->fails()){
