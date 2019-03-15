@@ -1,16 +1,21 @@
 <?php
+use App\User;
+use App\Conteudo;
+use App\Comentario;
 // php artisan passport:install
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 Route::post('/cadastro',"UsuarioController@cadastro");
 Route::post('/login',"UsuarioController@login");
 Route::middleware('auth:api')->get('/usuario', 'UsuarioController@usuario');
 Route::middleware('auth:api')->put('/perfil', "UsuarioController@perfil");
+route::get('/testes', function(){
+$user = User::find(1);
+
+$user->conteudos()->create([
+    'titulo'=>'Conteudo 01', 
+    'texto' => 'Aqui o testo', 
+    'imagem'=> 'Aqui ai uma imagem', 
+    'link'=>'Aqui vai um link'
+    'data' => '2019-05-10'
+]);
+return $user->conteudos();
+});
