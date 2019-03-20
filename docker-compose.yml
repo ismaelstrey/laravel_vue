@@ -1,0 +1,136 @@
+# ambientum
+
+
+# compose syntax version.
+version: "3.6"
+
+# services declaration.
+services:
+  # MySQL
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=ambientum
+      - MYSQL_PASSWORD=ambientum
+      - MYSQL_DATABASE=ambientum
+    ports:
+      - target: 3306
+        published: 3306
+  # PostgreSQL
+  postgres:
+    image: postgres:11.2
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=ambientum
+      - POSTGRES_PASSWORD=ambientum
+      - POSTGRES_DB=ambientum
+    ports:
+      - target: 5432
+        published: 5432
+  # Redis
+  redis:
+    image: redis:5-alpine
+    volumes:
+      - redis-data:/data
+    ports:
+      - target: 6379
+        published: 6379
+  # MongoDB
+  mongo:
+    image: mongo:4.1
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=ambientum
+      - MONGO_INITDB_ROOT_PASSWORD=ambientum
+    ports:
+      - target: 27017
+        published: 27017
+  # Web Application
+  web:
+    image: ambientum/php:7.3-nginx
+    volumes:
+      - .:/var/www/app
+      - dot-config:/home/ambientum/.config
+      - dot-cache:/home/ambientum/.cache
+      - dot-local:/home/ambientum/.local
+      - dot-composer:/home/ambientum/.composer
+    environment:
+      - FRAMEWORK=laravel
+      - XDEBUG_ENABLED=true
+      - OPCACHE_MODE=normal
+      - PHP_MEMORY_LIMIT=256M
+    ports:
+      - target: 8080
+        published: 8080
+      - target: 8083
+        published: 8083
+    links:
+      - mysql
+      - postgres
+      - redis
+      - mongo
+      - mailhog
+  # Laravel Queue Worker
+  queue:
+    image: ambientum/php:7.3
+    volumes:
+      - .:/var/www/app
+      - dot-config:/home/ambientum/.config
+      - dot-cache:/home/ambientum/.cache
+      - dot-local:/home/ambientum/.local
+      - dot-composer:/home/ambientum/.composer
+    command:
+      - php
+      - artisan
+      - queue:work
+    environment:
+      - FRAMEWORK=laravel
+      - XDEBUG_ENABLED=false
+      - OPCACHE_MODE=disabled
+      - PHP_MEMORY_LIMIT=256M
+    links:
+      - mysql
+      - postgres
+      - redis
+      - mongo
+      - mailhog
+  # MailHog
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - target: 1025
+        published: 1025
+      - target: 8025
+        published: 8025
+
+# volumes declaration.
+volumes:
+  # mysql-data
+  mysql-data:
+    driver: local
+  # postgres-data
+  postgres-data:
+    driver: local
+  # redis-data
+  redis-data:
+    driver: local
+  # mongo-data
+  mongo-data:
+    driver: local
+  # dot-config
+  dot-config:
+    driver: local
+  # dot-cache
+  dot-cache:
+    driver: local
+  # dot-local
+  dot-local:
+    driver: local
+  # dot-composer
+  dot-composer:
+    driver: local

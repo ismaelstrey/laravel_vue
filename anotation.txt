@@ -3,3 +3,10 @@ php artisan make:model Conteudo -m
 php artisan make:model Comentario -m
 php artisan make:migration create_amigos_table --create=amigos
 php artisan make:migration create_curtidas_table --create=curtidas
+
+Para todas as instâncias
+docker stop $(docker ps -a -q)
+Remove todas as instâncias
+docker rm $(docker ps -a -q)
+Para todas as imagens
+docker image rm $(docker image ls -a -q)

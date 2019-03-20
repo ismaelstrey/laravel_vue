@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Conteudo extends Model
 {
      protected $fillable = [
-        'titulo', 'texto', 'imagem','link', 'data'
+        'titulo', 'texto', 'img','link', 'date'
     ];
       public function comentarios()
     {
