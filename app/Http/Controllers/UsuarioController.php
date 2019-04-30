@@ -17,14 +17,23 @@ class UsuarioController extends Controller
                     'email' => ['required', 'string', 'email', 'max:255'],
                     'password' => ['required', 'string'],
                 ]);
+                
             if ($validacao->fails()){
-                return $validacao->errors();
+                return [
+                    'status'=>false,
+                    'validacao' => true,
+                    'erros'=>$validacao->errors()
+                ];                 
             }
+
             if(Auth::attempt(['email' => $data['email'], 'password' =>  $data['password']])){
                 $user = auth()->user();
                 $user->token = $user->createToken($user->email)->accessToken;
                 $user->image = asset($user->image);
-                return $user;
+                return [
+                    'status' => true,
+                    "usuario" => $user
+                ];
             }else{
                 return [
                     'status'=>false
@@ -42,7 +51,11 @@ class UsuarioController extends Controller
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
                 ]);
             if ($validacao->fails()){
-                return $validacao->errors();
+                 return [
+                    'status'=>false,
+                    'validacao' => true,
+                    'erros'=>$validacao->errors()
+                ]; 
             }
             $image = '/perfils/user.png';
             $user = User::create([
@@ -53,7 +66,10 @@ class UsuarioController extends Controller
                 ]);
              $user->token = $user->createToken($user->email)->accessToken;
              $user->image = asset($image);
-            return $user;
+            return [
+                'status' => true,
+                "usuario" => $user
+            ];
 
         }
          public function usuario(Request $request)
