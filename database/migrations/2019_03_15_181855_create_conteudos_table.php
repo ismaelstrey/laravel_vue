@@ -15,7 +15,7 @@ class CreateConteudosTable extends Migration
     {
         Schema::create('conteudos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id')->unsigned();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('titulo');
             $table->longText('texto');
@@ -24,6 +24,12 @@ class CreateConteudosTable extends Migration
             $table->dateTime('date');
             $table->timestamps();
         });
+        Schema::table('comentarios', function($table) {
+            $table->unsignedBigInteger('conteudo_id');
+            $table->foreign('conteudo_id')->references('id')->on('conteudos')->onDelete('cascade');
+
+        });
+
     }
 
     /**

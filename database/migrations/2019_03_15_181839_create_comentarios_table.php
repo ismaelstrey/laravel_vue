@@ -15,14 +15,15 @@ class CreateComentariosTable extends Migration
     {
         Schema::create('comentarios', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id')->unsigned();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('conteudo_id')->unsigned();
-            $table->foreign('conteudo_id')->references('id')->on('conteudo')->onDelete('cascade');
+
             $table->longText('texto');
             $table->dateTime('data');
             $table->timestamps();
+
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

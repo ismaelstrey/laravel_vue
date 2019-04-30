@@ -14,9 +14,9 @@ class CreateCurtidasTable extends Migration
     public function up()
     {
         Schema::create('curtidas', function (Blueprint $table) {
-              $table->integer('user_id')->unsigned();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('conteudo_id')->unsigned();
+            $table->unsignedBigInteger('conteudo_id');
             $table->foreign('conteudo_id')->references('id')->on('conteudos')->onDelete('cascade');
         });
     }
