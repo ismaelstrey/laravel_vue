@@ -9,14 +9,13 @@ Route::middleware('auth:api')->get('/usuario', 'UsuarioController@usuario');
 Route::middleware('auth:api')->put('/perfil', "UsuarioController@perfil");
 route::get('/testes', function(){
 $user = User::find(1);
-
-// $user->conteudos()->create([
-//     'titulo'=>'Conteudo 01',
-//     'texto' => 'Aqui o testo',
-//     'img'=> 'Aqui ai uma imagem',
-//     'link'=>'Aqui vai um link',
-//     'date' => date('Y-m-d'),
-//     'user_id'=>'1'
-// ]);
-return $user->conteudos();
+$conteudo = Conteudo::all();
+$user->conteudos()->create([
+    'titulo'=>'Conteudo 01',
+    'texto' => 'Aqui o testo',
+    'img'=> 'Aqui ai uma imagem',
+    'link'=>'Aqui vai um link',
+    'date' => date('Y-m-d')
+]);
+return $user->conteudos;
 });
