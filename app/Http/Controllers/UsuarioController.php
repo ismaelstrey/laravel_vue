@@ -71,11 +71,7 @@ class UsuarioController extends Controller
                 "usuario" => $user
             ];
 
-        }
-         public function usuario(Request $request)
-        {
-            return $request->user();
-        }
+        }        
         public function perfil(Request $request)
         {
                 $user = $request->user();
@@ -87,7 +83,11 @@ class UsuarioController extends Controller
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
                     ]);
                     if($validacao->fails()){
-                        return $validacao->errors();
+                        return [
+                            'status'=>false,
+                            'validacao' => true,
+                            'erros'=>$validacao->errors()
+                        ];  
                     }
                     $data['password'] = Hash::make($data['password']);
                     } else {
@@ -96,7 +96,11 @@ class UsuarioController extends Controller
                     'email' => ['required', 'string', 'email', 'max:255',  Rule::unique('users')->ignore($user->id)],
                     ]);
                     if ($validacao->fails()){
-                        return $validacao->errors();
+                        return [
+                            'status'=>false,
+                            'validacao' => true,
+                            'erros'=>$validacao->errors()
+                        ];  
                     }
                     $user->name = $data['name'];
                     $user->email = $data['email'];
@@ -133,7 +137,11 @@ class UsuarioController extends Controller
                 ],['base64image'=>'Imagem inválida']);
 
                 if($validacao->fails()){
-                return $validacao->errors();
+                 return [
+                    'status'=>false,
+                    'validacao' => true,
+                    'erros'=>$validacao->errors()
+                ];  
             }
                 // fim validação
                 $time = time();
@@ -165,6 +173,9 @@ class UsuarioController extends Controller
                 $user->save();
                 $user->image = asset($user->image);
                 $user->token = $user->createToken($user->email)->accessToken;
-                return $user;
+                return [
+                'status' => true,
+                "usuario" => $user
+            ];
         }
 }
