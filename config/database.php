@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysqli'),
+    'default' => env('DB_CONNECTION', 'postgres'),
 
     /*
     |--------------------------------------------------------------------------
