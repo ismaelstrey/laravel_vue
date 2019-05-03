@@ -19,8 +19,8 @@ class CreateConteudosTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('titulo');
             $table->longText('texto');
-            $table->string('img');
-            $table->string('link');
+            $table->string('img')->nullable();
+            $table->string('link')->nullable();
             $table->dateTime('date');
             $table->timestamps();
         });

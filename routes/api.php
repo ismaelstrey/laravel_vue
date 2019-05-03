@@ -6,7 +6,10 @@ use App\Comentario;
 Route::post('/cadastro',"UsuarioController@cadastro");
 Route::post('/login',"UsuarioController@login");
 Route::middleware('auth:api')->put('/perfil', "UsuarioController@perfil");
+Route::middleware('auth:api')->post('/conteudo/adicionar',"ConteudoController@adicionar");
+
 route::get('/testes', function(){
+    // $user = User::all();
 $user = User::find(1);
 $user2 = User::find(2);
 //  Cria conteudo para um usuario
@@ -40,17 +43,17 @@ $user2 = User::find(2);
 // return $conteudo->curtidas;
 // _________________FIM__________________
 // add Comentarios
-$conteudo = Conteudo::find(1);
-$user->comentarios()->create([
-    'conteudo_id' => $conteudo->id,
-    'texto' => 'Bha que legal esse conteudo',
-    'data' => date('Y-m-d')
-]);
-$user2->comentarios()->create([
-    'conteudo_id' => $conteudo->id,
-    'texto' => 'Bem isso que eu estava procurando',
-    'data' => date('Y-m-d')
-]);
-return $conteudo->comentarios;
-
+// $conteudo = Conteudo::find(1);
+// $user->comentarios()->create([
+//     'conteudo_id' => $conteudo->id,
+//     'texto' => 'Bha que legal esse conteudo',
+//     'data' => date('Y-m-d')
+// ]);
+// $user2->comentarios()->create([
+//     'conteudo_id' => $conteudo->id,
+//     'texto' => 'Bem isso que eu estava procurando',
+//     'data' => date('Y-m-d')
+// ]);
+// return $conteudo->comentarios;
+return $user;
 });
